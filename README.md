@@ -1,4 +1,2 @@
-# MIMUW projects
-They are undocumented.
-They have no instructions.
-Some of them were done in a team.
+# Projekty na MIM UW
+Niestety bez dokumentacji, instrukcji. Część z nich była robiona zespołowo.

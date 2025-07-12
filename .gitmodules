@@ -7,3 +7,6 @@
 [submodule "so/clipboard"]
 	path = so/clipboard
 	url = https://github.com/Pilusx/clipboard
+[submodule "kolo-informatyczne"]
+	path = kolo-informatyczne
+	url = https://github.com/Pilusx/kolo-informatyczne

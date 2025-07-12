@@ -1,0 +1,18 @@
+przekręcenie obiektu Date
+
+bez template-ów - korzystamy z virtualnych klasy (np. decoration)
+
+komentarze do każdej z klas - po co one tam są
+
+
+przy takiej strukturze - gdzie powinny być wirtualne destruktory? !!
+
+helper.h:65, 72 i wgl wszędzie - przekazywanie przez referencje !!
+
+hierarchia - do uproszczenia !!
+
+
+większość klas powinna być czysto wirtualna - w ten sposób unikniemy możliwości skonstruowania obiektu w main()
+
+
+klasy na wierzchu hierarchii - powinny być zablokowane przed konstrukcją

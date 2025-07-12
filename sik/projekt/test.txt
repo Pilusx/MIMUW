@@ -1,0 +1,11 @@
+?info
+dIscOver
+UPLOAD test.txt
+search
+feTch serv3e2.txt
+fetch serv2e1.txt
+upload serv2e1.txt
+search
+?info
+?sync
+exit

@@ -1,0 +1,30 @@
+version: '3.5'
+services:
+  server:
+    entrypoint: /bin/bash -c "cd code && ./server.sh"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+    - "..:/code"
+    networks:
+      siknet:
+  
+  client:
+    entrypoint: /bin/bash -c "cd code && ./client.sh"
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+    - ..:/code
+    depends_on: 
+    - "server"
+    networks:
+      siknet:
+
+networks:
+  siknet:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 10.5.0.0/16

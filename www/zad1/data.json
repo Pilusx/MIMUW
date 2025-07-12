@@ -1,0 +1,49 @@
+{
+  "urlroot": "http://prezydent2000.pkw.gov.pl/gminy",
+  "print_all_logs": false,
+  "logging": "INFO",
+  "templates": "templates",
+  "database": "database.db",
+  "htmldir": "html",
+  "cssdir": "css",
+  "imgdir": "img",
+  "datasrc": "obwod",
+  "cssfile": "style.css",
+  "wojewodztwaurl": "https://pl.wikipedia.org/wiki/Powiaty_w_Polsce",
+  "krajurl": "index.html",
+  "cssmap_poland_dir": "cssmap-poland",
+  "directories": {
+    "obwod": {
+      "urldir": "obwody.html",
+      "prefix": "obw",
+      "directory": "obwody",
+      "type": "all_xls",
+      "template": "table.html",
+      "groupby": 1,
+      "namefrom": 2
+    }
+  },
+  "other_directories": {
+    "gmina": {
+      "urldir": "gminy.html",
+      "prefix": "gm-okr",
+      "directory": "okregi",
+      "type": "all_xls",
+      "template": "table.html"
+    },
+    "kraj": {
+      "urldir": "",
+      "prefix": "kraj.zip",
+      "directory": "kraj",
+      "type": "zip",
+      "template": "table.html"
+    },
+    "zagranica": {
+      "urldir": "",
+      "prefix": "zagranica",
+      "directory": "zagranica",
+      "type": "all_xls",
+      "template": "table.html"
+    }
+  }
+}

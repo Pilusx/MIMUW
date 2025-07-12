@@ -1,0 +1,24 @@
+1. Przy dołączaniu do grupy serwerowej.
+    Serwer A robi fetch:
+        Jesli posiada plik to wysyla remove file na mcast.
+        Jesli nie posiada ale dostal n > 1 wpisow, wysyla n-1 remove.
+
+2. Przy dodaniu pliku.
+    Serwer A sprawdza czy moze go dodac. Jesli moze to alokuje miejsce.
+
+    Serwer A pyta inne serwery B_i o plik. SIMPLE["MAY_I?", cmd_seq, filename]
+    
+    Serwer B_i odpowiada na adres ucast serwera A.
+        SIMPLE["NO. SIR", cmd_seq, filename] jesli posiada plik. 
+        Jesli go nie posiada to nie odpowiada.
+        Serwer B_i zaznacza, ze plik jest remote.
+
+    Jesli serwer A dostanie min. 1 ["NO. SIR"] to dealokuje pamiec. wpp. wysyla port.
+
+3. Przy usuwaniu pliku.
+    Jesli dostal z unicast to forwarduje na mcast.
+    Jesli dostal z mcast to usuwa.
+
+4. Przy odłączeniu.
+    Serwer A wysyla SIMPLE["FORGOT", cmd_seq, filename] dla wszystkich posiadanych plikow.
+    Serwery B_i po odebraniu usuwaja wpis o pliku z remote.

@@ -1,0 +1,5 @@
+wirtualizacja destruktora - wywołanie go z nadklasy nie zniszczy memberów podklasy
+
+destruktory mają być wirtualne tam, gdzie to konieczne - (gdy nie - komentarz, dlaczego)
+
+linkowanie - zwróć uwagę na static order disaster

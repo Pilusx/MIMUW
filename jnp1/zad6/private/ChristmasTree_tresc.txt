@@ -1,0 +1,366 @@
+Zbliżają się święta Bożego Narodzenia a wraz z nimi strojenie choinki. Rodzina
+Kowalskich właśnie wprowadziła się do nowego mieszkania i chciałaby ozdobić
+w nim drzewko świąteczne. Potrzebują wszystkiego: świerku, bombek, lampek... Jan
+Kowalski dysponuje pewną kwotą na ten cel. Jego żona Marysia i ich córka Ada
+umówiły się, że będą ubierać choinkę. Podekscytowana Ada bardzo lubi przebywać
+w otoczeniu choinki, dotykając bombek i bawiąc się światełkami. Przebieg
+wydarzeń reprezentuje poniższy kod:
+
+=== ChristmasTree.cc ===
+
+#include <iostream>
+#include <memory>
+#include "helper.h"
+#include "decoration.h"
+#include "person.h"
+
+using namespace std;
+
+int main()
+{
+  // Rodzina Kowalskich...
+  auto John = make_shared<Adult>("Jan", Price(1000));
+  auto Mary = make_shared<Adult>("Marysia");
+  auto Ada = make_shared<Child>("Ada");
+
+  // ... chciała mieć świąteczne drzewko...
+  ChristmasTree tree("Christmas tree");
+
+  // ... więc postanowiła kupić świeży świerk...
+  auto spruce = make_shared<Tree>("Fresh spruce", Price(300), Date(18, 8, 10));
+
+  // ... i różne ozdoby,
+  // światełka za 150 zł
+  auto lights = make_shared<Lights>("Bright colorful lights withs 100 LEDs",
+                                    Price(150));
+  // i kilka bombek.
+  auto glassBall1 = make_shared<GlassBall>("Glass ball in shape of snowman",
+                                           Price(10));
+  auto glassBall2 = make_shared<GlassBall>("Glass ball with Christmas tree",
+                                           Price(15));
+  auto glassBall3 = make_shared<GlassBall>("Glass ball with presents",
+                                           Price(15));
+
+  // Za zakupy odpowiedzialny jest Jan. Żona i córka obserwują pojawianie się
+  // ozdób:
+  tree.attachObserver(Mary);
+  tree.attachObserver(Ada);
+
+  // Podczas gdy Marysia z Adą ozdabiają drzewko...
+  tree.addDecoration(spruce);
+  tree.addDecoration(lights);
+  tree.addDecoration(glassBall1);
+  tree.addDecoration(glassBall2);
+  tree.addDecoration(glassBall3);
+
+  // Jan płaci rachunek kurierowi.
+  auto savings0 = John->getSavings();
+  for (auto& x : tree) {
+    John->buyDecoration(*x);
+  }
+  auto savings1 = John->getSavings();
+  cout << "Savings before: " << savings0 << " and after: " << savings1 << ".\n";
+
+  // Drzewko ozdobione. Rachunek zapłacony. Od tego momentu startuje zegar.
+  for (auto& time = currentDate();
+       time < Date(24, 18, 0);
+       ++time) {
+    // Ada bawi się ozdobami choinkowymi o losowych porach (również nocą)...
+    if (randomNumber() % 200 == 0) {
+      cout << time << "\n";
+      for (auto& x : tree) {
+        // ... przyglądając się i manipulując losowo wybranymi ozdobami.
+        if (randomNumber() % 4 == 0) {
+          x->doOperation(cout);
+        }
+      }
+    }
+  }
+}
+
+= Koniec pliku =
+
+Wynik działania programu uzyskany na maszynie students jest następujący (należy
+zauważyć, że wynik jest deterministyczny, gdyż funkcja randomNumber generuje
+deterministyczny ciąg liczb):
+
+=== Standardowe wyjście (ChristmasTree.out) ===
+
+We have new decoration!
+Total cost is 300 PLN.
+Wow!
+Fresh spruce: 100% of tree covered with needles
+We have new decoration!
+Total cost is 450 PLN.
+Wow!
+Bright colorful lights withs 100 LEDs: constant
+We have new decoration!
+Total cost is 460 PLN.
+Wow!
+Glass ball in shape of snowman: OK
+We have new decoration!
+Total cost is 475 PLN.
+Wow!
+Glass ball with Christmas tree: OK
+We have new decoration!
+Total cost is 490 PLN.
+Wow!
+Glass ball with presents: broken
+Savings before: 1000 PLN and after: 510 PLN.
+December, 18, 17:37
+Bright colorful lights withs 100 LEDs: blinking
+Glass ball with Christmas tree: OK
+Glass ball with presents: broken
+December, 18, 18:08
+Bright colorful lights withs 100 LEDs: off
+Glass ball with presents: broken
+December, 18, 20:26
+Fresh spruce: 100% of tree covered with needles
+Bright colorful lights withs 100 LEDs: constant
+Glass ball with Christmas tree: OK
+December, 18, 22:41
+Glass ball with presents: broken
+December, 19, 1:55
+December, 19, 2:02
+December, 19, 2:49
+December, 19, 4:35
+December, 19, 5:46
+December, 19, 9:48
+December, 19, 12:16
+Bright colorful lights withs 100 LEDs: blinking
+December, 19, 12:32
+Glass ball with Christmas tree: OK
+Glass ball with presents: broken
+December, 19, 15:09
+December, 20, 4:01
+Glass ball in shape of snowman: OK
+December, 20, 9:40
+Bright colorful lights withs 100 LEDs: off
+Glass ball with Christmas tree: OK
+December, 20, 20:31
+December, 20, 22:04
+Fresh spruce: 97% of tree covered with needles
+Glass ball with presents: broken
+December, 20, 23:50
+Bright colorful lights withs 100 LEDs: constant
+December, 21, 4:46
+Bright colorful lights withs 100 LEDs: blinking
+December, 21, 15:41
+Glass ball in shape of snowman: OK
+December, 21, 17:10
+Glass ball with Christmas tree: OK
+December, 21, 20:05
+Glass ball with presents: broken
+December, 21, 22:44
+December, 22, 5:46
+Glass ball with presents: broken
+December, 22, 11:18
+Glass ball with presents: broken
+December, 22, 17:04
+Fresh spruce: 94% of tree covered with needles
+Glass ball with Christmas tree: OK
+Glass ball with presents: broken
+December, 22, 17:39
+Fresh spruce: 94% of tree covered with needles
+Glass ball with Christmas tree: OK
+Glass ball with presents: broken
+December, 22, 20:07
+December, 23, 6:23
+Bright colorful lights withs 100 LEDs: off
+December, 23, 8:18
+Fresh spruce: 93% of tree covered with needles
+December, 23, 11:29
+Glass ball in shape of snowman: broken
+December, 23, 11:55
+Glass ball in shape of snowman: broken
+Glass ball with Christmas tree: OK
+Glass ball with presents: broken
+December, 23, 13:36
+Fresh spruce: 93% of tree covered with needles
+Glass ball in shape of snowman: broken
+Glass ball with Christmas tree: OK
+December, 23, 14:24
+Glass ball with presents: broken
+December, 23, 17:19
+Fresh spruce: 93% of tree covered with needles
+Glass ball with Christmas tree: OK
+December, 23, 21:46
+Bright colorful lights withs 100 LEDs: constant
+Glass ball with Christmas tree: OK
+Glass ball with presents: broken
+December, 24, 5:40
+Glass ball with presents: broken
+December, 24, 9:25
+December, 24, 9:41
+December, 24, 9:49
+December, 24, 11:12
+December, 24, 12:37
+December, 24, 15:26
+Fresh spruce: 91% of tree covered with needles
+December, 24, 16:01
+Bright colorful lights withs 100 LEDs: blinking
+December, 24, 16:39
+Glass ball in shape of snowman: broken
+December, 24, 16:59
+December, 24, 17:38
+Bright colorful lights withs 100 LEDs: off
+
+= Koniec pliku =
+
+Państwa zadaniem będzie napisanie odpowiednich funkcji i klas i zawarcie ich
+w plikach helper.h, helper.cc, decoration.h, decoration.cc, person.h oraz
+person.cc.
+
+=== Plik helper.h oraz helper.cc ===
+
+W tych plikach należy umieścić pomocnicze fragmenty kodu. Powinny się tam
+znaleźć następujące rzeczy.
+
+Funkcja randomNumber będąca interfejsem do generatora liczb losowych
+std::uniform_int_distribution i zwracająca liczby typu int z przedziału
+[0, std::numeric_limits<int>::max()]. Funkcja powinna wykorzystywać
+std::mersenne_twister_engine zainicjowane liczbą 0.
+
+Klasa Price odpowiadająca za obsługę kwot pieniężnych. Klasa ta powinna mieć:
+* konstruktor jednoargumentowy przyjmujący wartość typu int oznaczającą kwotę
+  w PLN (pełne złotówki, bez groszy), który może też pełnić rolę konstruktora
+  domyślnego z domyślną wartością 0
+* operatory +, -=, <, których działanie jest zgodne z powszechnymi oczekiwaniami
+  wobec tych operatorów
+* operator wypisania kwoty do strumienia << (format komunikatu powinien być
+  zgodny z wyżej podanym przykładowym wyjściem programu, a więc postaci typu
+  "1234 PLN")
+
+Klasa Date odpowiadająca za obsługę dat wraz z godziną (czas) ograniczonych do
+miesiąca grudzień. Klasa ta powinna mieć:
+* konstruktor trójargumentowy przyjmujący wartości typu int oznaczających dzień,
+  godzinę i minutę
+* operator preinkrementacji zwiększający czas o jedną minutę
+* dwuargumentowy operator - zwracający wartość typu int równą różnicy czasów
+  w minutach
+* operator < porównujący dwa obiekty typu Date
+* operator wypisania do strumienia << (format komunikatu powinien być zgodny
+  z wyżej podanym przykładowym wyjściem programu, a więc postaci typu
+  "December, 20, 13:04")
+
+Funkcja currentDate zwracająca bieżący czas symulacji. Symulacja zaczyna się
+18.12.2017 o godzinie 16:00 i kończy 24.12.2017 o godzinie 18:00.
+
+=== Plik person.h oraz person.cc ===
+
+W tych plikach należy umieścić definicje klasa Adult oraz Child. Obydwie klasy
+powinny mieć metodę getName zwracającą imię osoby typu std::string.
+
+Klasa Adult powinna mieć ponadto:
+* konstruktor dwuargumentowy zgodny z wyżej wymienionym przykładem; drugi
+  argument konstruktora powinien być obiektem typu Price reprezentującym
+  oszczędności z przeznaczeniem na cele świąteczne i powinien mieć wartość
+  domyślną zerową
+* metodę buyDecoration, która zmniejsza poziom oszczędności danej osoby o kwotę
+  zakupu dekoracji świątecznej
+* metodę getSavings zwracającą obiekt typu Price informującą o bieżącym poziomie
+  oszczędności osoby
+
+Klasa Child powinna mieć konstruktor jednoargumentowy zgodny z wyżej wymienionym
+przykładem.
+
+W naszym zadaniu tylko osoby dorosłe mogą mieć oszczędności i dokonywać zakupów.
+
+=== Plik decoration.h oraz decoration.cc ===
+
+W tych plikach należy umieścić definicje klas GlassBall, Lights oraz Tree
+będące ozdobami świątecznymi. Każda z tych klas powinna mieć konstruktor
+przyjmujący nazwę ozdoby (std::string) i cenę (Price). W przypadku Tree trzecim
+argumentem konstruktora powinna być data ścięcia drzewka. Ponadto każda z tych
+klas powinna mieć:
+* metodę getName zwracającą obiekt typu std::string z nazwą ozdoby
+* metodę getPrice zwracającą obiekt typu Price z ceną ozdoby
+* metodę doOperation wypisującą do strumienia std::ostream napis
+  charakterystyczny dla danej ozdoby
+Metoda doOperation różni się od klasy do klasy. W przypadku:
+* klasy GlassBall tłucze bombkę z prawdopodobieństwem 25% i wypisuje do
+  strumienia informację o stanie bombki: OK/broken
+* klasy Lights przełącza cyklicznie światełka na jeden z dostępnych trybów pracy
+  i wypisuje do strumienia informację o stanie światełek: off/constant/blinking
+* klasy Tree oblicza poziom pokrycia drzewka igłami z użyciem jakiegoś modelu
+  i wypisuje do strumienia wynik w procentach (model należy zaproponować
+  samodzielnie i może być dowolny, tzn. nie musi być realny; jedyny wymóg jest
+  taki, aby drzewko z upływem czasu traciło igły)
+
+Ponadto należy zdefiniować klasę ChristmasTree będąca kompozytem ozdób. Klasa ta
+powinna mieć:
+* metodę doOperation wywołującą metody doOperation wszystkich ozdób należących
+  do kompozytu
+* metodę getPrice zwracającą obiekt typu Price z całkowitą ceną wszystkich
+  ozdób należących do kompozytu
+* metodę addDecoration umożliwiającą dodanie do kompozytu nowej ozdoby poprzez
+  wskaźnik shared_ptr
+* metodę removeDecoration umożliwiającą usunięcie z kompozytu ozdoby poprzez
+  iterator
+* metody begin oraz end zwracające iteratory "non-const" do pierwszego elementu
+  w kompozycie oraz do elementu "jeden-za-ostatnim" (kompozyt traktujemy tu jak
+  kontener)
+* metodę attachObserver umożliwiającą dołączenie obserwatora choinki poprzez
+  wskaźnik shared_ptr
+* metodę detachObserver umożliwiającą odłączenie obserwatora choinki poprzez
+  iterator
+* metodę notify informującą obserwatorów o zmianach jej stanu (dodanie nowej
+  dekoracji, tzn. obiektów klasy Tree, GlassBall, Lights)
+W realizacji klasy ChristmasTree należy wykorzystać wzorce projektowe kompozyt
+i obserwator.
+
+Obiekt klasy Child w powyższym przykładzie na notyfikację reaguje poprzez
+wypisanie do strumienia komunikatu "Wow!" oraz wykonanie operacji doOperation
+na ostatnio dodanej dekoracji. Obiekt klasy Adult reaguje poprzez wypisanie do
+strumienia komunikatu "We have new decoration!" oraz komunikatu
+"Total cost is n PLN.", gdzie n oznacza cenę wszystkich dodanych do choinki
+dekoracji (włącznie z drzewkiem-świerkiem).
+
+=== Uwagi ===
+
+* Nie wszystkie klasy wymagane do zaimplementowania tego zadania są podane
+  w treści. Należy samodzielnie zaproponować niewyspecyfikowane klasy tak, aby
+  spełnić wymogi wzorców projektowych kompozyt i obserwator.
+* Metody klas wymienione w treści zadania powinny być zaimplementowane
+  w odpowiednim miejscu (tzn. w klasie bazowej lub pochodnej) zgodnie z wymogami
+  podanych wzorców.
+* Wszystkie klasy niepodane w treści zadania powinny mieć konstruktory
+  niemożliwe do wywołania z poziomu funkcji main.
+
+=== Rozwiązanie ===
+
+Rozwiązanie powinno być zawarte w plikach:
+* decoration.h
+* decoration.cc
+* helper.h
+* helper.cc
+* person.h
+* person.cc
+które należy umieścić w repozytorium w katalogu
+
+grupaN/zadanie6/ab123456+cd123456
+
+lub
+
+grupaN/zadanie6/ab123456+cd123456+ef123456
+
+gdzie N jest numerem grupy, a ab123456, cd123456, ef123456 są identyfikatorami
+członków zespołu umieszczającego to rozwiązanie.
+Katalog z rozwiązaniem nie powinien zawierać innych plików, ale może zawierać
+podkatalog private, gdzie można umieszczać różne pliki, np. swoje testy. Pliki
+umieszczone w tym podkatalogu nie będą oceniane.
+
+=== Udanych Świąt życzą ===
+===   Prowadzący JNP1   ===
+
+
+     /\
+*    -- *
+  *  /\
+*   /  \ * *
+ *  ----  *
+  *  /\  *
+*   /  \
+ * /    \ *
+*  ------
+     ||  *

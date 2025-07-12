@@ -1,0 +1,69 @@
+{% extends "main.html" %} {% block body %}
+<h1> {{container.link.name_pref}} {{ container.link.name }}</h1>
+{% if container.place %}
+<nav>
+    {% for link in container.place %}
+    <text class="place_type"> {{ link.name_pref }}</text>
+    <a href="{{ link.href }}"> {{ link.name }}</a>
+    {% if not loop.last %}
+    <text class="seperator">/</text> {% endif %} {% endfor %}
+</nav>
+{% endif %} {% if container.table %}
+<section class="stats_votes">
+    <table>
+        <thead>
+            <tr>
+                {% for column in container.table.columns %}
+                <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in container.table.values %}
+            <tr>
+                {% for col in entry %}
+                <td> {{ col }} </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %} {% if container.links %}
+<section class="place_links">
+    <h3>Jednostki podrzędne</h3>
+    <div class="grid-container">
+        {% for link in container.links %}
+        <div class="grid-item">
+            <text class="place_type"> {{ link.name_pref }}</text>
+            <a href="{{ link.href }}"> {{ link.name }}</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %} {% if container.image %}
+<section class="stats_image">
+    <img src="{{ container.image.href }}" />
+</section>
+{% endif %} {% if container.table_cand %}
+<section class="stats_candidates">
+    <table>
+        <thead>
+            <tr>
+                {% for column in container.table_cand.columns %}
+                <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in container.table_cand.values %}
+            <tr>
+                {% for col in entry %}
+                <td> {{ col }} </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %} {% endblock %}

@@ -1,0 +1,13 @@
+{% extends "form.html" %} {% block form %} {% load render_table from django_tables2 %}
+<div class="box">
+    <div class="section group">
+        {% if filter %} {% block content %}
+        <h3>Filtr:</h3>
+        <form action="" method="get">
+            {{ filter.form.as_p }}
+            <input type="submit" />
+        </form>
+        {% render_table filter.qs %}{% endblock %} {% else %} {% render_table table %} {% endif %}
+    </div>
+</div>
+{% endblock %}

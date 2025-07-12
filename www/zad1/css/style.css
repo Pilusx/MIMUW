@@ -1,0 +1,71 @@
+th,
+td {
+  border: 1px;
+  border-color: black;
+  padding: 5px;
+  max-width: 5%;
+}
+
+h1 {
+  text-align: center;
+}
+
+@media only screen and (min-width: 600px) {
+  .grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+  }
+}
+
+.stats_votes table {
+  width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+  tr {
+    display: table;
+    width: 100%;
+  }
+  td,
+  th {
+    display: table-row;
+  }
+}
+
+section.stats_candidates th {
+  background: lightblue;
+}
+
+@media only screen and (max-width: 1650px) {
+  section.stats_candidates tr {
+    display: table;
+    width: 100%;
+  }
+  section.stats_candidates td,
+  section.stats_candidates th {
+    display: table-row;
+  }
+}
+
+.place_type {
+  text-transform: uppercase;
+}
+
+tbody tr:nth-of-type(odd) {
+  background: rgb(231, 188, 188);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  align-content: center;
+}
+
+td,
+tr {
+  text-align: center;
+}
+
+.stats {
+  text-align: center;
+}

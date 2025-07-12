@@ -1,0 +1,41 @@
+{% extends "main.html" %} {% block css %}
+<!-- CSSMap STYLESHEET - POLAND -->
+<link rel="stylesheet" type="text/css" href="cssmap-poland/cssmap-poland.css" media="screen" /> {% endblock %} {% block body %}
+<!-- CSSMap - Poland -->
+<section class="map">
+    <h1>Wyniki wyborów w Polsce w 2000 roku.</h1>
+    <div id="map-poland">
+        <ul class="poland">
+            {% for woj in wojs %}
+            <li class="{{ woj.cls }}">
+                <a href="{{woj.href}}"> {{ woj.name }} </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+<!-- END OF THE CSSMap - Poland -->
+
+{% if container.image %}
+<section class="stats">
+    <img src="{{ container.image.href }}" />
+</section>
+{% endif %}
+
+<!-- jQuery -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+<!-- CSSMap SCRIPT -->
+<script type="text/javascript" src="https://cssmapsplugin.com/5/jquery.cssmap.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // CSSMap;
+        $("#map-poland").CSSMap({
+            "size": 650,
+        });
+        // END OF THE CSSMap;
+
+    });
+</script> {% endblock %}

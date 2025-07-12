@@ -1,0 +1,8 @@
+{% extends "form.html" %} {% block form %}
+<div class="box">
+    {% for feature in features %}
+    <div class="section group">
+        <a href=" {{ feature.link }} " class="button button1 span_1_of_3 {{feature.link_style}}">{{ feature.name }}</a>
+    </div>
+    {% endfor %}
+</div> {% endblock %}

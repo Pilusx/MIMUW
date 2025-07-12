@@ -1,0 +1,252 @@
+// TODO skopiować pliki skryptem
+// Poprawić
+// Zrobić diffa
+
+########################################
+%    /usr/src/minix/kernel
+########################################
+tablica proc w strukturach jądra zawiera informacje niezbędne przy zmianie kontekstu i szeregowaniu (/proc.h) 
+%/proc.h 
+SJF_Q = 8 //(2b)
+MAX_SJFPRIO=100 //(2a)
+struct proc //(3a) dodać expected_time
+
+
+void enqueue(struct proc *rp);
+void dequeue(struct proc *rp);
+
+
+%/proc.c
+Podstawowa część algorytmu szeregowania, czyli wybór następnego procesu do wykonania, 
+zawarta jest w funkcji pick_proc() zdefiniowanej w /proc.c
+
+
+
+%/cpulocals.h (ale go nie trzeba zmieniać.)
+ Oprócz tego w pliku/cpulocals.h zdefiniowane są tablice
+    struct proc *run_q_head[NR_SCHED_QUEUES]
+    struct proc *run_q_tail[NR_SCHED_QUEUES]
+
+    char p_priority – priorytet procesu
+    struct proc *p_nextready – następny proces w kolejce
+
+
+%/system.h
+int do_schedule(struct proc * caller, message *m_ptr);
+int do_schedctl(struct proc * caller, message *m_ptr);
+int do_schedule_sjf(struct proc * caller, message *m_ptr) //(4aB)
+
+%/system.c
+  /* Scheduling */
+  map(SYS_SCHEDULE, do_schedule);       /* reschedule a process */
+  map(SYS_SCHEDCTL, do_schedctl);       /* change process scheduler */
+  map(SYS_SCHEDULE_SJF, do_schedule_sjf); //(4aC)
+
+
+
+Oprócz wyboru nowego procesu do działania i przełączania kontekstu, jądro musi implementować wspomniane wcześniej wywołania systemowe. 
+Są one zdefiniowane w plikach /do_schedctl.c i /do_schedule.c
+
+%/system/do_schedctl.c
+
+%/system/do_schedule.c
+
+
+
+%/system/do_schedule_sjf.c na podstawie do_schedule.c
+
+========================================
+%    /usr/src/minix/include/minix/com.h który będzie kopiowany do /usr/include/minix/com.h,
+========================================
+Czy to tutaj siedzą funkcje z mikrojądra? TAK.
+#  define SYS_SCHEDULE   (KERNEL_CALL + 3)      /* sys_schedule() */
+#  define SYS_SCHEDCTL (KERNEL_CALL + 54)       /* sys_schedctl() */
+#  define SYS_SCHEDULE_SJF (KERNEL_CALL + ?)    /* sys_schedule_sjf() */ //(4aA)
+
+#define NR_SYS_CALLS    58+1      /* number of kernel calls */    
+    
+########################################
+%    /usr/src/minix/servers/sched
+########################################
+%/schedproc.h
+Domyślny serwer działa w nieskończonej pętli, odpowiednio przetwarzając otrzymywane wiadomości omówione wyżej. 
+Wszelkie informacje na temat procesów (maksymalny priorytet, aktualny priorytet itp.) 
+serwera sched przechowywane są w pomocniczej tablicy schedproc.
+
+
+%/schedule.c //(4b)
+Wszystkie funkcje przetwarzające otrzymywane wiadomości są tutaj zdefiniowane.
+
+balance_queues() odpowiada za zmianę priorytetów //(5aB)
+
+
+########################################
+%    /usr/src/minix/lib/libsys
+########################################
+m_lsys_krn_schedule przerobić tak żeby trzymał expected_time
+
+%/sys_schedule.c
+ + dodać czas Tutaj można mu dać ifa, którą funkcję schedulującą ma wywołać?
+%/sys_schedctl.c
+
+%/sys_schedule_sjf.c
+
+
+
+========================================
+%    /usr/src/minix/include/minix/syslib.h, który będzie kopiowany do /usr/include/minix/syslib.h
+========================================
+int sys_schedctl(unsigned flags, endpoint_t proc_ep, unsigned priority, unsigned quantum, unsigned cpu);
+
+int sys_schedule(endpoint_t proc_ep, unsigned priority, unsigned quantum, unsigned_cpu);
+int sys_schedule_sjf(endpoint_t proc_ep, unsigned priority, unsigned quantum, unsigned expected_time, unsigned_cpu);
+
+m_lsys_krn_schedule + dodać czas
+
+
+
+
+
+
+
+
+
+// 4. Dodać funkcję systemową mikrojądra na podstawie do_schedule do_schedule_sjf
+http://feipeng.ch/2011/creating-a-kernel-call-as-well-as-a-system-call-in-minix-3-3/
+W sched będą tylko funkcje szeregujące.
+
+a) Do zmiany metody szeregowania można dodać nową funkcję systemową mikrojądra. Warto w tym przypadku wzorować się na przykład na funkcji do_schedule().
+    +A) callnr sys_schedule_sjf /include/minix/com.h
+       # NR_SYS_CALLS +1
+       # define SYS_SCHEDULE_SJF (KERNEL_CALL + ?)
+    +B) prototyp do_schedule_sjf kernel/system.h
+    +C) Mapowanie sys_schedule_sjf na do_schedule_sjf kernel/system.c
+    D) Kernel call definicja sys_schedule_sjf() lib/libsys/sys_schedule_sjf.c
+    E) tak jak funkcja biblioteczna
+
+
+
+// 5. Zmodyfikować algorytm szeregujący
+Nie trzeba pisać nowego serwera szeregującego. Można zmodyfikować domyślny serwer sched.
+Załóżmy, że pewne procesy działające w systemie wykonują się cyklicznie: pracują przez jakiś czas, który da się oszacować, a następnie śpią. 
+
+a) Poprawić ustalanie priorytetów
+Podczas działania procesy szeregowane zgodnie z algorytmem SJF nie zmieniają swojego priorytetu (kolejki) w odróżnieniu od zwykłych procesów szeregowanych domyślnie. 
+*** Należy zadbać o to, aby zwykłym procesom nie był przydzielany priorytet SJF_Q.
+    A) Natomiast o wartości priorytetu decyduje serwer sched, który powinien dbać o to, aby zwykłym procesom nie przydzielić priorytetu SJF_Q.
+    B) Jeśli procesowi spada priorytet to ma przeskoczyć SJF_Q, a jeśli wzrasta ma wzrosnąć. 7 -> 9 -> 7 (balance_queues)
+
+
+
+
+b) Poprawić wstawianie elementów
+Wszystkie procesy szeregowane zgodnie z algorytmem SJF mają ten sam ustalony priorytet SJF_Q, co oznacza, że znajdują się w tej samej kolejce procesów gotowych do wykonania. 
+W obrębie tej kolejki procesy są posortowane zgodnie z oczekiwanym czasem wykonania. 
+*** Należy zapewnić prawidłowe umieszczenie procesu w kolejce w czasie szeregowania.
+=> W której funkcji trzeba to nadpisać? Przypominamy, że za wstawianie do kolejki procesów gotowych odpowiedzialne jest mikrojądro (/usr/src/minix/kernel/proc.c).
+
+
+
+
+
+
+
+////////////////////////////////////////
+    Diff
+////////////////////////////////////////
+*** Konieczne zmiany w mikrojądrze, serwerach sched i pm, przy czym bezpośrednio za nagłówkiem każdej funkcji, która została dodana lub zmieniona, należy dodać komentarz /* sjf_2018 */.
+    Poniżej przyjmujemy, że ab123456 oznacza identyfikator studenta rozwiązującego zadanie. 
+    Należy przygotować łatkę (ang. patch) ze zmianami w katalogu /usr/src. 
+    Plik o nazwie ab123456.patch uzyskujemy za pomocą polecenia diff -rupN, tak jak w zadaniu 3. http://students.mimuw.edu.pl/~nk385744/folders/SO/zadania/3/zadanie3.txt
+    Będzie on aplikowany w /usr z opcją -p1.
+
+
+////////////////////////////////////////
+    Instalacja patcha
+////////////////////////////////////////
+    Aby nowy algorytm szeregowania zaczął działać, należy wykonać make;
+make install w katalogu / usr / src / minix / servers /
+    sched oraz w innych katalogach zawierających
+        zmiany.=
+    > Trzeba dobrze dopisywać funkcje albo modyfikować wszystkie makefile.
+
+      Następnie trzeba zbudować nowy obraz jądra,
+        czyli wykonać make do -
+            hdboot w katalogu / usr / src / releasetools i zrestartować system.
+
+
+////////////////////////////////////////
+    Kroki
+////////////////////////////////////////
+
+// 1. Dodać funkcję systemową setsjf (serwer pm)
+http://students.mimuw.edu.pl/~nk385744/folders/SO/scenariusze/6/przeczytaj_mnie.html
++a) callnr do_setsjf
++b) prototyp setsjf
++c) definicja w unistd int setsjf(int expected_time). 
+
++d) prototyp do_setsjf w serwerze pm
++e) definicja do_setsjf w serwerze pm
+Jeśli wartość parametru jest dodatnia, to szeregowanie procesu zostanie zmienione na SJF z oczekiwanym czasem pracy równym expected_time. 
+Wartość 0 oznacza, że proces rezygnuje z szeregowania SJF i wraca do szeregowania domyślnego.
+=> Wywołuje funkcje z mikrojądra. (4)
+
+/usr/include/minix/syslib.h
+int sys_schedctl(unsigned flags, endpoint_t proc_ep, unsigned priority, unsigned quantum, unsigned cpu);
+int sys_schedule(endpoint_t proc_ep, unsigned priority, unsigned quantum, unsigned_cpu);
+
+Funkcja powinna przekazywać jako wynik 0, jeśli metoda szeregowania została zmieniona pomyślnie, a −1 w przeciwnym przypadku. 
+Jeśli wartość parametru nie jest prawidłowa (ujemna lub większa niż MAX_SJFPRIO=100), to errno przyjmuje wartość EINVAL. 
+Jeśli proces, który chce zmienić metodę szeregowania na SJF, jest już szeregowany zgodnie z SJF, to errno przyjmuje wartość EPERM.
+
+
+// 2. Dodać stałe szeregujące. 
+http://students.mimuw.edu.pl/~nk385744/folders/SO/scenariusze/8/przeczytaj_mnie.html
++a) Definicja stałej MAX_SJFPRIO=100 określająca wartość expected_time <- do_setsjf musi ją widzieć => serwer pm
++b) Definicję stałej SJF_Q = 8 określającej priorytet procesów szeregowanych algorytmem SJF. <- a ta chyba może być w sched => serwer sched
+
+
+// 3. System powinien dla każdego procesu przechowywać jego oczekiwany czas pracy.
++a) Dodać do struktury procesu expected_time
++b) Jak ustawić expected_time procesowi? Ma to robić funkcja do_setsjf w pm (1e)
+
+
+////////////////////////////////////////
+    Pliki
+////////////////////////////////////////
+
+========================================
+%    /usr/src/minix/include/minix/callnr.h, który będzie kopiowany do /usr/include/minix/callnr.h
+========================================
+Wywołanie systemowe
+
+- Deklaracja numeru funkcji systemowej setsjf //(1a)
+
+========================================
+%    /usr/src/include/unistd.h, który będzie kopiowany do /usr/include/unistd.h
+========================================
+Funkcja biblioteczna
+
+- Prototyp funkcji bibliotecznej setsjf //(1b)
+
+########################################
+%    /usr/src/lib/libc/misc
+########################################
+//(1c)
+%/setsjf.c
+Treść funkcji bibliotecznej
+
+%/Makefile.inc
+SRCS+=  stack_protector.c setsjf.c
+
+
+########################################
+%    /usr/src/minix/servers/pm
+########################################
+//(1d)
+%/proto.h — dodanie nagłówka nowej funkcji
+%/table.c — rejestracja nowej funkcji
+
+//(1e)(3b)
+%/do_setsjf.c — implementacja nowej funkcji
+%/Makefile 

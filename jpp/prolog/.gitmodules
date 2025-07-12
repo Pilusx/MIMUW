@@ -1,0 +1,3 @@
+[submodule "gym"]
+	path = gym
+	url = https://gitlab.com/awarelab/gym-sokoban.git

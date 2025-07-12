@@ -1,0 +1,13 @@
+.vscode/
+trash/
+netstore-client
+netstore-server
+html/
+latex/
+drive/
+static/
+tcp-client-recv
+tcp-client-send
+tcp-server-recv
+tcp-server-send
+split-test

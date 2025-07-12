@@ -1,0 +1,112 @@
+=== FILE:  road_PA_10.txt
+Directed edges: 20
+Vertices: 12
+Maxdeg:  4
+=== FILE:  road_PA_20.txt
+Directed edges: 40
+Vertices: 21
+Maxdeg:  4
+=== FILE:  road_PA_30.txt
+Directed edges: 60
+Vertices: 30
+Maxdeg:  4
+=== FILE:  road_PA_40.txt
+Directed edges: 80
+Vertices: 39
+Maxdeg:  5
+=== FILE:  road_PA_50.txt
+Directed edges: 100
+Vertices: 48
+Maxdeg:  5
+=== FILE:  road_PA_60.txt
+Directed edges: 120
+Vertices: 56
+Maxdeg:  5
+=== FILE:  road_PA_70.txt
+Directed edges: 140
+Vertices: 64
+Maxdeg:  5
+=== FILE:  road_PA_80.txt
+Directed edges: 160
+Vertices: 71
+Maxdeg:  5
+=== FILE:  road_PA_90.txt
+Directed edges: 180
+Vertices: 77
+Maxdeg:  5
+=== FILE:  road_PA_100.txt
+Directed edges: 200
+Vertices: 87
+Maxdeg:  5
+=== FILE:  road_PA_250.txt
+Directed edges: 500
+Vertices: 201
+Maxdeg:  5
+=== FILE:  road_PA_500.txt
+Directed edges: 1000
+Vertices: 385
+Maxdeg:  5
+=== FILE:  road_PA_750.txt
+Directed edges: 1500
+Vertices: 562
+Maxdeg:  5
+=== FILE:  road_PA_1000.txt
+Directed edges: 2000
+Vertices: 767
+Maxdeg:  5
+=== FILE:  road_PA_1250.txt
+Directed edges: 2500
+Vertices: 986
+Maxdeg:  5
+=== FILE:  road_PA_3000.txt
+Directed edges: 6000
+Vertices: 2263
+Maxdeg:  6
+=== FILE:  road_PA_7000.txt
+Directed edges: 14000
+Vertices: 5139
+Maxdeg:  7
+=== FILE:  road_PA_15000.txt
+Directed edges: 30000
+Vertices: 10541
+Maxdeg:  7
+=== FILE:  road_PA_30000.txt
+Directed edges: 60000
+Vertices: 21531
+Maxdeg:  7
+=== FILE:  road_PA_50000.txt
+Directed edges: 100000
+Vertices: 34428
+Maxdeg:  7
+=== FILE:  road_PA_70000.txt
+Directed edges: 140000
+Vertices: 47587
+Maxdeg:  7
+=== FILE:  road_PA_100000.txt
+Directed edges: 200000
+Vertices: 68987
+Maxdeg:  7
+=== FILE:  road_PA_200000.txt
+Directed edges: 400000
+Vertices: 141050
+Maxdeg:  8
+=== FILE:  road_PA_300000.txt
+Directed edges: 600000
+Vertices: 213050
+Maxdeg:  8
+=== FILE:  road_PA_400000.txt
+Directed edges: 800000
+Vertices: 283713
+Maxdeg:  8
+=== FILE:  road_PA_500000.txt
+Directed edges: 1000000
+Vertices: 356019
+Maxdeg:  8
+=== FILE:  road_PA_1000000.txt
+Directed edges: 2000000
+Vertices: 705029
+Maxdeg:  9
+=== FILE:  road_PA_15000000.txt
+Directed edges: 3083796
+Vertices: 1088092
+Maxdeg:  9

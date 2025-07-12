@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css" />
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <!-- -->
+    <div id="path">
+        {% if request.get_full_path != '/' %}
+        <form method="get" action="..">
+            <button type="submit">Przejdź do strony głównej.</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- -->
+    <div id="header" class="headline">
+        {% block header %} {% endblock %}
+    </div>
+
+    <!-- -->
+    <div id="help" class="paragraph ">
+        {% block help %} {% endblock %}
+    </div>
+
+    <!-- -->
+    <div id="form ">
+        {% block form %} {% endblock %}
+    </div>
+</body>
+
+</html>

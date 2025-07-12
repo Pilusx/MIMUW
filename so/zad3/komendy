@@ -1,0 +1,9 @@
+git clone git@bitbucket.org:pilusx/so-3.git
+yes
+cd so-3/patch
+./diff.sh
+./patch.sh
+cd ~/so-3
+./test.sh
+
+

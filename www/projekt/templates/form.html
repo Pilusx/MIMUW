@@ -1,0 +1,15 @@
+{% extends "message.html" %} {% block form %} {% if messages %}
+<ul class="messages">
+	{% for message in messages %}
+	<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+		{% endfor %}
+</ul>
+
+{% else %}
+<form method="post">
+	<table>
+		{% csrf_token %} {{ form.as_table }}
+	</table>
+	<input type="submit" value="Submit" />
+</form>
+{% endif %} {% endblock %}

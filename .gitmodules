@@ -1,0 +1,9 @@
+[submodule "jpp/sokoban-prolog-solver"]
+	path = jpp/sokoban-prolog-solver
+	url = https://github.com/Pilusx/sokoban-prolog-solver
+[submodule "jpp/ocamlhi"]
+	path = jpp/ocamlhi
+	url = https://github.com/Pilusx/ocamlhi
+[submodule "so/clipboard"]
+	path = so/clipboard
+	url = https://github.com/Pilusx/clipboard
